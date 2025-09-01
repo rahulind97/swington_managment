@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swington_managment/constants/constants.dart';
 import 'package:swington_managment/utils/Utils.dart';
 import 'package:swington_managment/view_controller/AddBillScreen.dart';
+import 'package:swington_managment/view_controller/HeadListScreen.dart';
 
 class DashboardScreen extends StatefulWidget {
   final List<dynamic> adminPermissions;
@@ -63,6 +64,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 );
 
               }else if(module["module_id"]=="94"){
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HeadListScreen(),
+                  ),
+                );
 
               }else if (module["module_id"]=="95"){
 
