@@ -60,6 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
           String token = data['admin_userdata']['api_token'];
           Utils.saveStringToPrefs(constants.USER_ID, userid);
           Utils.saveStringToPrefs(constants.TOKEN, token);
+          Utils.saveStringToPrefs(constants.EMAIL, _emailController.text);
+          Utils.saveStringToPrefs(constants.PASSWORD, _passwordController.text);
 
           if (!mounted) return;
           Navigator.pushReplacement(

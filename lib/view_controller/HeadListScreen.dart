@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:swington_managment/constants/constants.dart';
+import 'package:swington_managment/utils/Utils.dart';
 
 import '../utils/ApiInterceptor.dart';
 
@@ -13,8 +15,9 @@ class HeadListScreen extends StatefulWidget {
 class _HeadListScreenState extends State<HeadListScreen> {
   final Dio _dio = ApiInterceptor.createDio();
   final String baseUrl = "https://blueviolet-spoonbill-658373.hostingersite.com/demotesting/api/v1";
-  final String userId = "39";
-  final String apiToken = "237528b9d7998ad49da5af40bec99d63bd4915f9452457bc55a68413afbba19a";
+
+  String userid ="";
+  String token ="";
 
   List heads = [];
   bool loading = true;
@@ -24,6 +27,14 @@ class _HeadListScreenState extends State<HeadListScreen> {
   @override
   void initState() {
     super.initState();
+    initate();
+
+  }
+
+
+  void initate()async {
+    userid = (await Utils.getStringFromPrefs(constants.USER_ID))!;
+    token = (await Utils.getStringFromPrefs(constants.TOKEN))!;
     fetchHeads();
   }
 
@@ -31,8 +42,8 @@ class _HeadListScreenState extends State<HeadListScreen> {
     setState(() => loading = true);
     try {
       final formData = FormData.fromMap({
-        "user_id": userId,
-        "apiToken": apiToken,
+        "user_id": userid,
+        "apiToken": token,
       });
 
       final response = await _dio.post(
@@ -60,8 +71,8 @@ class _HeadListScreenState extends State<HeadListScreen> {
   Future<void> addHead(String name) async {
     try {
       final formData = FormData.fromMap({
-        "user_id": userId,
-        "apiToken": apiToken,
+        "user_id": userid,
+        "apiToken": token,
         "name": name,
       });
 
@@ -75,8 +86,8 @@ class _HeadListScreenState extends State<HeadListScreen> {
   Future<void> updateHead(String id, String name) async {
     try {
       final formData = FormData.fromMap({
-        "user_id": userId,
-        "apiToken": apiToken,
+        "user_id": userid,
+        "apiToken": token,
         "head_id": id,
         "name": name,
       });
@@ -91,8 +102,8 @@ class _HeadListScreenState extends State<HeadListScreen> {
   Future<void> deleteHead(String id) async {
     try {
       final formData = FormData.fromMap({
-        "user_id": userId,
-        "apiToken": apiToken,
+        "user_id": userid,
+        "apiToken": token,
         "head_id": id,
       });
 
