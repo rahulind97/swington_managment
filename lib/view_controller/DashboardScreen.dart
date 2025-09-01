@@ -4,6 +4,8 @@ import 'package:swington_managment/utils/Utils.dart';
 import 'package:swington_managment/view_controller/AddBillScreen.dart';
 import 'package:swington_managment/view_controller/HeadListScreen.dart';
 
+import 'App Imprest.dart';
+
 class DashboardScreen extends StatefulWidget {
   final List<dynamic> adminPermissions;
 
@@ -21,7 +23,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     initate();
     super.initState();
   }
@@ -73,7 +74,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 );
 
               }else if (module["module_id"].toString()=="95"){
-
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AppImprestScreen(userId: '', apiToken: '',),
+                  ),
+                );
               }
 
 
