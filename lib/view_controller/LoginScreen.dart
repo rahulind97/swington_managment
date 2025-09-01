@@ -16,6 +16,24 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    initate();
+
+    super.initState();
+  }
+  void initate()async {
+    _emailController.text = (await Utils.getStringFromPrefs(constants.USER_ID))!;
+    _passwordController.text = (await Utils.getStringFromPrefs(constants.TOKEN))!;
+
+    setState(() {
+
+    });
+  }
+
   Future<void> _login() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
