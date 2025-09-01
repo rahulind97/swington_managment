@@ -1,4 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:swington_managment/constants/constants.dart';
+import 'package:swington_managment/utils/Utils.dart';
+import 'package:swington_managment/view_controller/DashboardScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,6 +15,84 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isLoading = false;
+  Future<void> _login() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    print("🔹 Login Attempt -> email: $email, password: $password");
+
+    if (email.isEmpty || password.isEmpty) {
+      print("❌ Email or Password is empty");
+      _showError("Email and Password are required");
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse("https://blueviolet-spoonbill-658373.hostingersite.com/demotesting/api/v1/loginappuser"),
+      );
+      request.fields['username'] = email;
+      request.fields['password'] = password;
+
+      print("📤 Sending request to: ${request.url}");
+      print("📩 Request fields: ${request.fields}");
+
+      var response = await request.send();
+      print("📥 Raw response status: ${response.statusCode}");
+
+      var responseData = await response.stream.bytesToString();
+      print("📥 Response body: $responseData");
+
+      if (response.statusCode == 200) {
+        final data = json.decode(responseData);
+        print("✅ Decoded JSON: $data");
+
+        if (data["status"] == 200) {
+          List<dynamic> permissions = data["admin_permissions"];
+          print("✅ Login success. Permissions: $permissions");
+          String userid = data['admin_userdata']['id'];
+          String token = data['admin_userdata']['api_token'];
+          Utils.saveStringToPrefs(constants.USER_ID, userid);
+          Utils.saveStringToPrefs(constants.TOKEN, token);
+
+          if (!mounted) return;
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DashboardScreen(adminPermissions: permissions),
+            ),
+          );
+        } else {
+          print("⚠️ Login failed: ${data["message"]}");
+          _showError(data["message"] ?? "Login failed");
+        }
+      } else {
+        print("❌ Server error code: ${response.statusCode}");
+        _showError("Server error: ${response.statusCode}");
+      }
+    } catch (e, stack) {
+      print("🔥 Exception: $e");
+      print("📌 StackTrace: $stack");
+      _showError("Something went wrong: $e");
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+
+  void _showError(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +117,6 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Logo Placeholder
                 Container(
                   height: 80,
                   width: 200,
@@ -46,7 +128,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Title
                 const Text(
                   "Login to your account",
                   style: TextStyle(
@@ -57,7 +138,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Email Field
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -73,7 +153,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 15),
 
-                // Password Field
                 TextField(
                   controller: _passwordController,
                   obscureText: true,
@@ -90,13 +169,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Login Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      debugPrint("Email: ${_emailController.text}, Password: ${_passwordController.text}");
-                    },
+                    onPressed: _isLoading ? null : _login,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFD2B48C),
                       shape: RoundedRectangleBorder(
@@ -104,7 +180,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    child: const Text(
+                    child: _isLoading
+                        ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                        : const Text(
                       "Login",
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
@@ -118,3 +203,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
