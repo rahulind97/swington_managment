@@ -26,8 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
   }
   void initate()async {
-    _emailController.text = (await Utils.getStringFromPrefs(constants.USER_ID))!;
-    _passwordController.text = (await Utils.getStringFromPrefs(constants.TOKEN))!;
+    _emailController.text = (await Utils.getStringFromPrefs(constants.EMAIL))!;
+    _passwordController.text = (await Utils.getStringFromPrefs(constants.PASSWORD))!;
 
     setState(() {
 
