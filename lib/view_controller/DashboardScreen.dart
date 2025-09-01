@@ -42,7 +42,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: const Color(0xFFD2B48C),
         title: const Text("Dashboard"),
       ),
-      body: GridView.builder(
+      body: widget.adminPermissions.isEmpty
+          ? const Center(
+        child: Text(
+          "No Permissions",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      )
+          : GridView.builder(
         padding: const EdgeInsets.all(16),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, // 2 buttons per row

@@ -241,7 +241,8 @@ class _AddBillScreenState extends State<AddBillScreen> {
                 ),
                 items: const [
                   DropdownMenuItem(value: "imprest", child: Text("Imprest")),
-                  DropdownMenuItem(value: "normal", child: Text("Normal")),
+                  DropdownMenuItem(value: "online", child: Text("Online")),
+                  DropdownMenuItem(value: "offline", child: Text("Offline")),
                 ],
                 onChanged: (value) {
                   setState(() {

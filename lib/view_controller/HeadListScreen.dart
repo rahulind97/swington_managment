@@ -269,7 +269,7 @@ class _HeadListScreenState extends State<HeadListScreen> {
                   if (widget.p_delete == "1")
                     IconButton(
                       icon: Icon(Icons.delete,
-                          color: Colors.red[200]),
+                          color: Colors.red[300]),
                       onPressed: () =>
                           _confirmDelete(head["id"].toString()),
                     ),
