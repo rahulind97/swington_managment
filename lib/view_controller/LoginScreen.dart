@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:swington_managment/view_controller/HeadListScreen.dart';
+import 'package:dio/dio.dart';
+
+import '../utils/ApiInterceptor.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,6 +14,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final Dio _dio = ApiInterceptor.createDio(); // Use ApiInterceptor to create Dio instance
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +100,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      debugPrint("Email: ${_emailController.text}, Password: ${_passwordController.text}");
+
+                      // debugPrint("Email: ${_emailController.text}, Password: ${_passwordController.text}");
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (_) => HeadListScreen()
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFD2B48C),
