@@ -54,8 +54,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           final module = widget.adminPermissions[index];
           return GestureDetector(
             onTap: () {
+              print("object");
 
-              if(module["module_id"]=="93"){
+              if(module["module_id"].toString()=="93"){
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -63,7 +64,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 );
 
-              }else if(module["module_id"]=="94"){
+              }else if(module["module_id"].toString()=="94"){
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -71,24 +72,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 );
 
-              }else if (module["module_id"]=="95"){
+              }else if (module["module_id"].toString()=="95"){
 
               }
 
 
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-
-
-                    "Clicked on ${module["module_name"]} (ID: ${module["module_id"]})",
-
-
-
-                  ),
-                ),
-              );
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   SnackBar(
+              //     content: Text(
+              //
+              //
+              //       "Clicked on ${module["module_name"]} (ID: ${module["module_id"]})",
+              //
+              //
+              //
+              //     ),
+              //   ),
+              // );
             },
             child: Container(
               decoration: BoxDecoration(
