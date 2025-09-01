@@ -9,11 +9,13 @@ import 'package:swington_managment/utils/Utils.dart';
 class AddBillScreen extends StatefulWidget {
   final String userId;
   final String apiToken;
+  final String p_add;
 
   const AddBillScreen({
     super.key,
     required this.userId,
     required this.apiToken,
+    required this.p_add,
   });
 
   @override
@@ -49,7 +51,7 @@ class _AddBillScreenState extends State<AddBillScreen> {
     try {
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse("https://blueviolet-spoonbill-658373.hostingersite.com/demotesting/api/v1/get-heads"),
+        Uri.parse("${constants.BASE_URL}get-heads"),
       );
 
       request.fields['user_id'] = widget.userId;
@@ -106,7 +108,7 @@ class _AddBillScreenState extends State<AddBillScreen> {
     try {
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse("https://blueviolet-spoonbill-658373.hostingersite.com/demotesting/api/v1/addBills"),
+        Uri.parse("${constants.BASE_URL}addBills"),
       );
 
       request.fields['head_id'] = _selectedHeadId!;
@@ -155,7 +157,14 @@ class _AddBillScreenState extends State<AddBillScreen> {
         backgroundColor: const Color(0xFFD2B48C),
         title: const Text("Add Bill"),
       ),
-      body: _isFetchingHeads
+      body: widget.p_add == "0"
+          ? const Center(
+        child: Text(
+          "You don't have permission to add a bill.",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      )
+          : _isFetchingHeads
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
         padding: const EdgeInsets.all(20),

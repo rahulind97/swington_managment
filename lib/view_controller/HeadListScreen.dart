@@ -6,7 +6,12 @@ import 'package:swington_managment/utils/Utils.dart';
 import '../utils/ApiInterceptor.dart';
 
 class HeadListScreen extends StatefulWidget {
-  const HeadListScreen({super.key});
+  final String p_add;
+  final String p_edit;
+  final String p_delete;
+  final String p_view;
+
+  HeadListScreen(this.p_add, this.p_edit, this.p_delete, this.p_view, {super.key});
 
   @override
   State<HeadListScreen> createState() => _HeadListScreenState();
@@ -14,10 +19,9 @@ class HeadListScreen extends StatefulWidget {
 
 class _HeadListScreenState extends State<HeadListScreen> {
   final Dio _dio = ApiInterceptor.createDio();
-  final String baseUrl = "https://blueviolet-spoonbill-658373.hostingersite.com/demotesting/api/v1";
 
-  String userid ="";
-  String token ="";
+  String userid = "";
+  String token = "";
 
   List heads = [];
   bool loading = true;
@@ -28,11 +32,9 @@ class _HeadListScreenState extends State<HeadListScreen> {
   void initState() {
     super.initState();
     initate();
-
   }
 
-
-  void initate()async {
+  void initate() async {
     userid = (await Utils.getStringFromPrefs(constants.USER_ID))!;
     token = (await Utils.getStringFromPrefs(constants.TOKEN))!;
     fetchHeads();
@@ -47,7 +49,7 @@ class _HeadListScreenState extends State<HeadListScreen> {
       });
 
       final response = await _dio.post(
-        "$baseUrl/get-heads",
+        "${constants.BASE_URL}get-heads",
         data: formData,
       );
 
@@ -76,7 +78,7 @@ class _HeadListScreenState extends State<HeadListScreen> {
         "name": name,
       });
 
-      await _dio.post("$baseUrl/add-heads", data: formData);
+      await _dio.post("${constants.BASE_URL}add-heads", data: formData);
       fetchHeads();
     } catch (e) {
       debugPrint("Add error: $e");
@@ -92,7 +94,7 @@ class _HeadListScreenState extends State<HeadListScreen> {
         "name": name,
       });
 
-      await _dio.post("$baseUrl/update-heads", data: formData);
+      await _dio.post("${constants.BASE_URL}update-heads", data: formData);
       fetchHeads();
     } catch (e) {
       debugPrint("Update error: $e");
@@ -107,7 +109,7 @@ class _HeadListScreenState extends State<HeadListScreen> {
         "head_id": id,
       });
 
-      await _dio.post("$baseUrl/delete-heads", data: formData);
+      await _dio.post("${constants.BASE_URL}delete-heads", data: formData);
       fetchHeads();
     } catch (e) {
       debugPrint("Delete error: $e");
@@ -211,11 +213,16 @@ class _HeadListScreenState extends State<HeadListScreen> {
         ),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(
+
+      // ✅ Show Add button only if p_add == "1"
+      floatingActionButton: widget.p_add == "1"
+          ? FloatingActionButton(
         backgroundColor: themeColor,
         onPressed: () => _showAddEditDialog(),
         child: const Icon(Icons.add, color: Colors.white),
-      ),
+      )
+          : null,
+
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : heads.isEmpty
@@ -225,6 +232,12 @@ class _HeadListScreenState extends State<HeadListScreen> {
         itemCount: heads.length,
         itemBuilder: (context, index) {
           final head = heads[index];
+
+          // ✅ Restrict view: If p_view == "0", don’t show list
+          if (widget.p_view == "0") {
+            return const SizedBox.shrink();
+          }
+
           return Card(
             elevation: 4,
             margin: const EdgeInsets.symmetric(vertical: 8),
@@ -242,18 +255,24 @@ class _HeadListScreenState extends State<HeadListScreen> {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton(
-                    icon: Icon(Icons.edit, color: themeColor),
-                    onPressed: () => _showAddEditDialog(
-                      id: head["id"].toString(),
-                      currentName: head["name"],
+                  // ✅ Edit button only if p_edit == "1"
+                  if (widget.p_edit == "1")
+                    IconButton(
+                      icon: Icon(Icons.edit, color: themeColor),
+                      onPressed: () => _showAddEditDialog(
+                        id: head["id"].toString(),
+                        currentName: head["name"],
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () =>
-                        _confirmDelete(head["id"].toString()),
-                  ),
+
+                  // ✅ Delete button only if p_delete == "1"
+                  if (widget.p_delete == "1")
+                    IconButton(
+                      icon: Icon(Icons.delete,
+                          color: Colors.red[200]),
+                      onPressed: () =>
+                          _confirmDelete(head["id"].toString()),
+                    ),
                 ],
               ),
             ),

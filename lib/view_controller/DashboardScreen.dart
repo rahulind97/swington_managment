@@ -61,7 +61,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddBillScreen(userId: userid, apiToken: token),
+                    builder: (context) => AddBillScreen(userId: userid, apiToken: token,p_add:module["add_permission"].toString() ),
                   ),
                 );
 
@@ -69,7 +69,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => HeadListScreen(),
+                    builder: (context) => HeadListScreen(module["add_permission"].toString(),module["edit_permission"].toString(),module["delete_permission"].toString(),module["view_permission"].toString()  ),
                   ),
                 );
 
@@ -77,25 +77,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AppImprestScreen(userId: '', apiToken: '',),
+                    builder: (context) => AppImprestScreen(userId: userid, apiToken: token,p_add:module["add_permission"].toString() ,p_view: module["view_permission"].toString(),),
                   ),
                 );
               }
 
 
-
-              // ScaffoldMessenger.of(context).showSnackBar(
-              //   SnackBar(
-              //     content: Text(
-              //
-              //
-              //       "Clicked on ${module["module_name"]} (ID: ${module["module_id"]})",
-              //
-              //
-              //
-              //     ),
-              //   ),
-              // );
             },
             child: Container(
               decoration: BoxDecoration(

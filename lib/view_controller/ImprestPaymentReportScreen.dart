@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:swington_managment/constants/constants.dart';
 
 class ImprestPaymentReportScreen extends StatefulWidget {
   final String userId;
@@ -33,7 +34,7 @@ class _ImprestPaymentReportScreenState
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            'https://blueviolet-spoonbill-658373.hostingersite.com/demotesting/api/v1/imperest-payment-report'),
+            '${constants.BASE_URL}imperest-payment-report'),
       );
       request.fields['user_id'] = widget.userId;
       request.fields['apiToken'] = widget.apiToken;
@@ -69,9 +70,9 @@ class _ImprestPaymentReportScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFFD2B48C),
         title: const Text("Imprest Payment Report"),
         centerTitle: true,
-        backgroundColor: const Color(0xFF006699),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

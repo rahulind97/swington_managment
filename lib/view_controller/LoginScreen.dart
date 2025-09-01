@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse("https://blueviolet-spoonbill-658373.hostingersite.com/demotesting/api/v1/loginappuser"),
+        Uri.parse("${constants.BASE_URL}loginappuser"),
       );
       request.fields['username'] = email;
       request.fields['password'] = password;
