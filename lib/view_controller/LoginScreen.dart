@@ -74,9 +74,9 @@ class _LoginScreenState extends State<LoginScreen> {
         if (data["status"] == 200) {
           List<dynamic> permissions = data["admin_permissions"];
           print("✅ Login success. Permissions: $permissions");
-          String userid = data['admin_userdata']['id'];
+          String userid = data['admin_userdata']['id'].toString();
           String token = data['admin_userdata']['api_token'];
-          Utils.saveStringToPrefs(constants.USER_ID, userid);
+          Utils.saveStringToPrefs(constants.USER_ID, userid.toString());
           Utils.saveStringToPrefs(constants.TOKEN, token);
           Utils.saveStringToPrefs(constants.EMAIL, _emailController.text);
           Utils.saveStringToPrefs(constants.PASSWORD, _passwordController.text);
