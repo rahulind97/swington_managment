@@ -57,7 +57,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               print("object");
 
               if(module["module_id"].toString()=="93"){
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => AddBillScreen(userId: userid, apiToken: token),
@@ -65,7 +65,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 );
 
               }else if(module["module_id"].toString()=="94"){
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => HeadListScreen(),

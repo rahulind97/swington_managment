@@ -16,6 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -144,7 +145,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: const Color(0xFFD2B48C),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.image, size: 50, color: Colors.white),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.contain, // optional
+                    ),
+                  ),
+
                 ),
                 const SizedBox(height: 20),
 
@@ -173,21 +181,33 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 15),
 
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: "Enter password",
-                    filled: true,
-                    fillColor: const Color(0xFFF5F5F5),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
+
+            TextField(
+            controller: _passwordController,
+            obscureText: _obscurePassword,
+            decoration: InputDecoration(
+              hintText: "Enter password",
+              filled: true,
+              fillColor: const Color(0xFFF5F5F5),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide.none,
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
                 ),
-                const SizedBox(height: 20),
+                onPressed: () {
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+              ),
+            ),
+          ),
+
+            const SizedBox(height: 20),
 
                 SizedBox(
                   width: double.infinity,
