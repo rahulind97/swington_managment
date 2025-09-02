@@ -5,17 +5,20 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:swington_managment/constants/constants.dart';
 import 'package:swington_managment/utils/Utils.dart';
+import 'package:swington_managment/view_controller/BillReportScreen.dart';
 
 class AddBillScreen extends StatefulWidget {
   final String userId;
   final String apiToken;
   final String p_add;
+  final String p_view;
 
   const AddBillScreen({
     super.key,
     required this.userId,
     required this.apiToken,
     required this.p_add,
+    required this.p_view,
   });
 
   @override
@@ -156,6 +159,24 @@ class _AddBillScreenState extends State<AddBillScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFD2B48C),
         title: const Text("Add Bill"),
+        actions: [
+          if (widget.p_view == "1") // 👈 Show report button only if p_view = 1
+            IconButton(
+              icon: const Icon(Icons.receipt_long),
+              tooltip: "View Report",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BillReportScreen(
+                      userId: widget.userId,
+                      apiToken: widget.apiToken,
+                    ),
+                  ),
+                );
+              },
+            ),
+        ],
       ),
       body: widget.p_add == "0"
           ? const Center(

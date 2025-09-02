@@ -68,7 +68,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddBillScreen(userId: userid, apiToken: token,p_add:module["add_permission"].toString() ),
+                    builder: (context) => AddBillScreen(userId: userid, apiToken: token,p_add:module["add_permission"].toString(),p_view: module["view_permission"].toString() ),
                   ),
                 );
 

@@ -50,7 +50,7 @@ class _AppImprestScreenState extends State<AppImprestScreen> {
   void initate() async {
     userid = (await Utils.getStringFromPrefs(constants.USER_ID))!;
     token = (await Utils.getStringFromPrefs(constants.TOKEN))!;
-    _fetchHeads();
+ //   _fetchHeads();
     fetchUsers();
   }
 
@@ -113,7 +113,7 @@ class _AppImprestScreenState extends State<AppImprestScreen> {
   }
 
   Future<void> makeImperestPayment() async {
-    if (_selectedHeadId == null ||
+    if (
         _toUserId == null ||
         _amountController.text.isEmpty ||
         _selectedDate == null) {
@@ -136,7 +136,7 @@ class _AppImprestScreenState extends State<AppImprestScreen> {
           "amount": _amountController.text.trim(),
           "date": DateFormat("yyyy-MM-dd").format(_selectedDate!),
           "apiToken": widget.apiToken,
-          "head_id": _selectedHeadId,
+       //   "head_id": _selectedHeadId,
         }),
       );
 
@@ -192,7 +192,7 @@ class _AppImprestScreenState extends State<AppImprestScreen> {
       backgroundColor: const Color(0xFFF9F6F2),
       appBar: AppBar(
         backgroundColor: const Color(0xFFD2B48C),
-        title: const Text("App Imprest"),
+        title: const Text("App Imprest Payment"),
         actions: [
           if (widget.p_view == "1") // 👈 Show report button only if p_view = 1
             IconButton(
@@ -234,26 +234,29 @@ class _AppImprestScreenState extends State<AppImprestScreen> {
           child: Column(
             children: [
               // Head Dropdown
-              DropdownButtonFormField<String>(
-                value: _selectedHeadId,
-                decoration: InputDecoration(
-                  hintText: "Select Head",
-                  filled: true,
-                  fillColor: const Color(0xFFEFF3FF),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
+              Visibility(
+                visible: false,
+                child: DropdownButtonFormField<String>(
+                  value: _selectedHeadId,
+                  decoration: InputDecoration(
+                    hintText: "Select Head",
+                    filled: true,
+                    fillColor: const Color(0xFFEFF3FF),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
+                    ),
                   ),
+                  items: _heads.map((head) {
+                    return DropdownMenuItem(
+                      value: head["id"].toString(),
+                      child: Text(head["name"]),
+                    );
+                  }).toList(),
+                  onChanged: (value) => setState(() {
+                    _selectedHeadId = value;
+                  }),
                 ),
-                items: _heads.map((head) {
-                  return DropdownMenuItem(
-                    value: head["id"].toString(),
-                    child: Text(head["name"]),
-                  );
-                }).toList(),
-                onChanged: (value) => setState(() {
-                  _selectedHeadId = value;
-                }),
               ),
               const SizedBox(height: 15),
 
@@ -355,7 +358,7 @@ class _AppImprestScreenState extends State<AppImprestScreen> {
                     ),
                   )
                       : const Text(
-                    "Submit Bill",
+                    "pay",
                     style: TextStyle(
                         fontSize: 16, color: Colors.white),
                   ),
