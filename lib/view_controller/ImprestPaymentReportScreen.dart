@@ -190,6 +190,21 @@ class _ImprestPaymentReportScreenState
 
                   // ✅ Show Amount
                   Text("Amount: ₹${item['amount'] ?? 0}"),
+                  const SizedBox(height: 6),
+
+// ✅ Payment Status with colors
+                  if (item['payment_status'] != null) ...[
+                    Text(
+                      "Payment Status : ${item['payment_status']}",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: item['payment_status'].toString().toLowerCase() == "received"
+                            ? Colors.green
+                            : Colors.red,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                  ],
 
                 ],
               ),
@@ -206,7 +221,7 @@ class _ImprestPaymentReportScreenState
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFD2B48C),
-          title: const Text("Imprest Payment Report"),
+          title: const Text("Head Imprest Report"),
           centerTitle: true,
           bottom: const TabBar(
             indicatorColor: Colors.white,
