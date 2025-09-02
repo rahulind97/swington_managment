@@ -22,6 +22,7 @@ class _ImprestPaymentReportScreenState
     extends State<ImprestPaymentReportScreen> {
   List<dynamic> reportData = [];
   List<dynamic> imprestPayment = [];
+  List<dynamic> imprestPaidPayment = [];
   int? totalBalance;
   int? remainingBalance;
   bool isLoading = true;
@@ -50,6 +51,7 @@ class _ImprestPaymentReportScreenState
         setState(() {
           reportData = jsonBody['reportData'] ?? [];
           imprestPayment = jsonBody['imprest_payment'] ?? [];
+          imprestPaidPayment = jsonBody['imprest_paid_payment'] ?? [];
           totalBalance = jsonBody['total_balance'];
           remainingBalance = jsonBody['remaining_blanace'];
           isLoading = false;
@@ -93,7 +95,6 @@ class _ImprestPaymentReportScreenState
             "Remaining Balance: ₹${remainingBalance ?? 0}",
             style: const TextStyle(
               color: Colors.black,
-
               fontWeight: FontWeight.bold,
               fontSize: 20,
             ),
@@ -145,89 +146,77 @@ class _ImprestPaymentReportScreenState
     );
   }
 
-  Widget buildImprestPaymentList() {
-    if (imprestPayment.isEmpty) {
-      return const Center(child: Text("No imprest payment data found"));
+  Widget buildImprestPaymentList(List<dynamic> list, String type) {
+    if (list.isEmpty) {
+      return Center(child: Text("No $type data found"));
     }
 
-    return // ✅ Imprest Payment Tab
-      ListView.builder(
-        padding: const EdgeInsets.all(12),
-        itemCount: imprestPayment.length,
-        itemBuilder: (context, index) {
-          var item = imprestPayment[index];
-          return Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            elevation: 2,
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // ✅ Show Bill Date
-                  Text(
-                    "Date: ${item['date'] ?? ''}",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+    return ListView.builder(
+      padding: const EdgeInsets.all(12),
+      itemCount: list.length,
+      itemBuilder: (context, index) {
+        var item = list[index];
+        return Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 2,
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Date: ${item['date'] ?? ''}",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
+                ),
+                const SizedBox(height: 6),
+
+                Text("Received From: ${item['received_from'] ?? ''}"),
+                const SizedBox(height: 6),
+
+                if (widget.userId == "1") ...[
+                  Text("Pay To: ${item['pay_to'] ?? ''}"),
                   const SizedBox(height: 6),
-
-                  // ✅ Show Received From instead of Head
-                  Text("Received From: ${item['received_from'] ?? ''}"),
-                  const SizedBox(height: 6),
-
-
-                  // ✅ Show Pay To only if userId == 1
-                  if (widget.userId == "1") ...[
-                    Text("Pay To: ${item['pay_to'] ?? ''}"),
-                  ],
-                  const SizedBox(height: 6),
-
-                  // ✅ Show Amount
-                  Text("Amount: ₹${item['amount'] ?? 0}"),
-                  const SizedBox(height: 6),
-
-// ✅ Payment Status with colors
-                  if (item['payment_status'] != null) ...[
-                    Text(
-                      "Payment Status : ${item['payment_status']}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: item['payment_status'].toString().toLowerCase() == "received"
-                            ? Colors.green
-                            : Colors.red,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                  ],
-
                 ],
-              ),
+
+                Text("Amount: ₹${item['amount'] ?? 0}"),
+                const SizedBox(height: 6),
+
+                // ✅ Payment Status without color change
+                if (item['payment_status'] != null) ...[
+                  Text(
+                    "Payment Status : ${item['payment_status'].toString().toLowerCase() == "received" ? "Received" : "Paid"}",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ],
             ),
-          );
-        },
-      );
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3, // ✅ now 3 tabs
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFD2B48C),
-          title: const Text("Head Imprest Report"),
+          title: const Text("Head Report"),
           centerTitle: true,
           bottom: const TabBar(
             indicatorColor: Colors.white,
             tabs: [
-              Tab(text: "Report Data"),
-              Tab(text: "Imprest Payment"),
+              Tab(text: "Head Payment"),
+              Tab(text: "Imprest In"),
+              Tab(text: "Imprest Out"),
             ],
           ),
         ),
@@ -240,7 +229,8 @@ class _ImprestPaymentReportScreenState
               child: TabBarView(
                 children: [
                   buildReportDataList(),
-                  buildImprestPaymentList(),
+                  buildImprestPaymentList(imprestPayment, "imprest received"),
+                  buildImprestPaymentList(imprestPaidPayment, "imprest paid"),
                 ],
               ),
             ),
