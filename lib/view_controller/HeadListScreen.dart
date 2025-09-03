@@ -70,12 +70,13 @@ class _HeadListScreenState extends State<HeadListScreen> {
     }
   }
 
-  Future<void> addHead(String name) async {
+  Future<void> addHead(String name,String amount) async {
     try {
       final formData = FormData.fromMap({
         "user_id": userid,
         "apiToken": token,
         "name": name,
+        "max_limit_amount": amount,
       });
 
       await _dio.post("${constants.BASE_URL}add-heads", data: formData);
@@ -155,7 +156,83 @@ class _HeadListScreenState extends State<HeadListScreen> {
               final name = controller.text.trim();
               if (name.isNotEmpty) {
                 if (id == null) {
-                  addHead(name);
+                  addHead(name,"");
+                } else {
+                  updateHead(id, name);
+                }
+                Navigator.pop(context);
+              }
+            },
+            child: const Text("Save", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+  void _showAddEditDialogAdd({String? id, String? currentName, String? currentAmount}) {
+    final nameController = TextEditingController(text: currentName ?? "");
+    final amountController = TextEditingController(text: currentAmount ?? "");
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          id == null ? "Add Head" : "Edit Head",
+          style: TextStyle(
+            color: themeColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(
+                hintText: "Enter head name",
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: amountController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: "Enter amount",
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: themeColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: () {
+              final name = nameController.text.trim();
+              final amount = amountController.text.trim();
+              if (name.isNotEmpty && amount.isNotEmpty) {
+                if (id == null) {
+                  addHead(name, amount);
                 } else {
                   updateHead(id, name);
                 }
@@ -218,7 +295,7 @@ class _HeadListScreenState extends State<HeadListScreen> {
       floatingActionButton: widget.p_add == "1"
           ? FloatingActionButton(
         backgroundColor: themeColor,
-        onPressed: () => _showAddEditDialog(),
+        onPressed: () => _showAddEditDialogAdd(),
         child: const Icon(Icons.add, color: Colors.white),
       )
           : null,

@@ -12,6 +12,7 @@ class AddBillScreen extends StatefulWidget {
   final String apiToken;
   final String p_add;
   final String p_view;
+  final String approv_permission;
 
   const AddBillScreen({
     super.key,
@@ -19,6 +20,7 @@ class AddBillScreen extends StatefulWidget {
     required this.apiToken,
     required this.p_add,
     required this.p_view,
+    required this.approv_permission,
   });
 
   @override
@@ -171,6 +173,7 @@ class _AddBillScreenState extends State<AddBillScreen> {
                     builder: (context) => BillReportScreen(
                       userId: widget.userId,
                       apiToken: widget.apiToken,
+                     approv_permission: widget.approv_permission,
                     ),
                   ),
                 );

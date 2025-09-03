@@ -8,8 +8,9 @@ import 'App Imprest.dart';
 
 class DashboardScreen extends StatefulWidget {
   final List<dynamic> adminPermissions;
+  final String  dashboardsettings;
 
-  const DashboardScreen({super.key, required this.adminPermissions});
+  const DashboardScreen({super.key, required this.adminPermissions,required this.dashboardsettings});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -68,7 +69,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddBillScreen(userId: userid, apiToken: token,p_add:module["add_permission"].toString(),p_view: module["view_permission"].toString() ),
+                    builder: (context) => AddBillScreen(userId: userid, apiToken: token,p_add:module["add_permission"].toString(),p_view: module["view_permission"].toString(),approv_permission:widget.dashboardsettings ),
                   ),
                 );
 

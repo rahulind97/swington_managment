@@ -179,10 +179,9 @@ class _ImprestPaymentReportScreenState
                 Text("Received From: ${item['received_from'] ?? ''}"),
                 const SizedBox(height: 6),
 
-                if (widget.userId == "1") ...[
                   Text("Pay To: ${item['pay_to'] ?? ''}"),
                   const SizedBox(height: 6),
-                ],
+
 
                 Text("Amount: ₹${item['amount'] ?? 0}"),
                 const SizedBox(height: 6),
