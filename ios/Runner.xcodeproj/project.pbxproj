@@ -472,10 +472,10 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = A9N38K4R33;
 				ENABLE_BITCODE = NO;
-				FLUTTER_BUILD_NAME = 3.0.0;
-				FLUTTER_BUILD_NUMBER = 3;
+				FLUTTER_BUILD_NAME = 4.0.0;
+				FLUTTER_BUILD_NUMBER = 4;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Swington Managment";
+				INFOPLIST_KEY_CFBundleDisplayName = "Swinton Managment";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -664,10 +664,10 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = A9N38K4R33;
 				ENABLE_BITCODE = NO;
-				FLUTTER_BUILD_NAME = 3.0.0;
-				FLUTTER_BUILD_NUMBER = 3;
+				FLUTTER_BUILD_NAME = 4.0.0;
+				FLUTTER_BUILD_NUMBER = 4;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Swington Managment";
+				INFOPLIST_KEY_CFBundleDisplayName = "Swinton Managment";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -696,10 +696,10 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = A9N38K4R33;
 				ENABLE_BITCODE = NO;
-				FLUTTER_BUILD_NAME = 3.0.0;
-				FLUTTER_BUILD_NUMBER = 3;
+				FLUTTER_BUILD_NAME = 4.0.0;
+				FLUTTER_BUILD_NUMBER = 4;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Swington Managment";
+				INFOPLIST_KEY_CFBundleDisplayName = "Swinton Managment";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

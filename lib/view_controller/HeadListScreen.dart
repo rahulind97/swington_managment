@@ -251,89 +251,206 @@ class _HeadListScreenState extends State<HeadListScreen> {
 
       body: loading
           ? const Center(child: CircularProgressIndicator())
+          : widget.p_view == "0"
+          ? const Center(child: Text("You don’t have permission to view"))
           : heads.isEmpty
           ? const Center(child: Text("No heads found"))
-          : ListView.builder(
-        padding: const EdgeInsets.all(12),
-        itemCount: heads.length,
-        itemBuilder: (context, index) {
-          final head = heads[index];
-
-          // ✅ Restrict view: If p_view == "0", don’t show list
-          if (widget.p_view == "0") {
-            return const SizedBox.shrink();
-          }
-
-          return Card(
-            elevation: 4,
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              title:
-              Row(
-                children: [
+          : Column(
+        children: [
+          // 🔹 Header row
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: const [
                   Expanded(
+                    flex: 3,
                     child: Text(
-                      head["name"],
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.red[50],
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.red.shade200),
-                    ),
-                    child: Text(
-                      head["max_limit_amount"].toString(),
+                      "Head",
                       style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.red[400],
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
-                ],
-              ),
-
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // ✅ Edit button only if p_edit == "1"
-                  if (widget.p_edit == "1")
-                    IconButton(
-                      icon: Icon(Icons.edit, color: themeColor),
-                      onPressed: () => _showAddEditDialogAdd(
-                        id: head["id"].toString(),
-                        currentName: head["name"],
-                        currentAmount: head["max_limit_amount"].toString(),
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      "Max Limit",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-
-                  // ✅ Delete button only if p_delete == "1"
-                  if (widget.p_delete == "1")
-                    IconButton(
-                      icon: Icon(Icons.delete,
-                          color: Colors.red[300]),
-                      onPressed: () =>
-                          _confirmDelete(head["id"].toString()),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      "Actions",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
+                  ),
+                //  SizedBox(width: 56), // space for action icons
                 ],
               ),
             ),
-          );
-        },
+          ),
+
+          // 🔹 List
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.fromLTRB(12, 6, 12, 12),
+              itemCount: heads.length,
+              itemBuilder: (context, index) {
+                final head = heads[index];
+
+                return Card(
+                  elevation: 3,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // 🔸 Left: Head name + Tags
+                        Expanded(
+                          flex: 6,
+                          child: Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                (head["name"] ?? "").toString(),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                             // const SizedBox(height: 8),
+
+                              // Tags row: ONLY "Generate Bill" as requested
+                              // Wrap(
+                              //   spacing: 8,
+                              //   runSpacing: 8,
+                              //   children: [
+                              //     Container(
+                              //       padding:
+                              //       const EdgeInsets.symmetric(
+                              //           horizontal: 10,
+                              //           vertical: 5),
+                              //       decoration: BoxDecoration(
+                              //         color: Colors.green[50],
+                              //         borderRadius:
+                              //         BorderRadius.circular(8),
+                              //         border: Border.all(
+                              //             color: Colors
+                              //                 .green.shade200),
+                              //       ),
+                              //       child: Text(
+                              //         "Generate Bill",
+                              //         style: TextStyle(
+                              //           fontSize: 12.5,
+                              //           fontWeight: FontWeight.w600,
+                              //           color: Colors.green[700],
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(width: 12),
+
+                        // 🔸 Middle-right: Max Limit (single spot -> no duplication)
+                        Expanded(
+                          flex: 3,
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.red[50],
+                                borderRadius:
+                                BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: Colors.red.shade200),
+                              ),
+                              child: Text(
+                                (head["max_limit_amount"] ?? "")
+                                    .toString(),
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.red[400],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(width: 8),
+
+                        // 🔸 Actions
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (widget.p_edit == "1")
+                              IconButton(
+                                tooltip: "Edit",
+                                icon: Icon(Icons.edit,
+                                    color: themeColor),
+                                onPressed: () => _showAddEditDialogAdd(
+                                  id: head["id"].toString(),
+                                  currentName:
+                                  (head["name"] ?? "")
+                                      .toString(),
+                                  currentAmount:
+                                  (head["max_limit_amount"] ??
+                                      "")
+                                      .toString(),
+                                ),
+                              ),
+                            if (widget.p_delete == "1")
+                              IconButton(
+                                tooltip: "Delete",
+                                icon: Icon(Icons.delete,
+                                    color: Colors.red[300]),
+                                onPressed: () => _confirmDelete(
+                                    head["id"].toString()),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
+
 }
