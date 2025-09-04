@@ -86,13 +86,14 @@ class _HeadListScreenState extends State<HeadListScreen> {
     }
   }
 
-  Future<void> updateHead(String id, String name) async {
+  Future<void> updateHead(String id, String name,String amount) async {
     try {
       final formData = FormData.fromMap({
         "user_id": userid,
         "apiToken": token,
         "head_id": id,
         "name": name,
+        "max_limit_amount": amount,
       });
 
       await _dio.post("${constants.BASE_URL}update-heads", data: formData);
@@ -117,58 +118,6 @@ class _HeadListScreenState extends State<HeadListScreen> {
     }
   }
 
-  void _showAddEditDialog({String? id, String? currentName}) {
-    final controller = TextEditingController(text: currentName ?? "");
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(
-          id == null ? "Add Head" : "Edit Head",
-          style: TextStyle(
-              color: themeColor, fontWeight: FontWeight.bold, fontSize: 18),
-        ),
-        content: TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            hintText: "Enter head name",
-            filled: true,
-            fillColor: Colors.grey.shade100,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: themeColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            onPressed: () {
-              final name = controller.text.trim();
-              if (name.isNotEmpty) {
-                if (id == null) {
-                  addHead(name,"");
-                } else {
-                  updateHead(id, name);
-                }
-                Navigator.pop(context);
-              }
-            },
-            child: const Text("Save", style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-    );
-  }
   void _showAddEditDialogAdd({String? id, String? currentName, String? currentAmount}) {
     final nameController = TextEditingController(text: currentName ?? "");
     final amountController = TextEditingController(text: currentAmount ?? "");
@@ -234,7 +183,7 @@ class _HeadListScreenState extends State<HeadListScreen> {
                 if (id == null) {
                   addHead(name, amount);
                 } else {
-                  updateHead(id, name);
+                  updateHead(id, name,amount);
                 }
                 Navigator.pop(context);
               }
@@ -322,13 +271,41 @@ class _HeadListScreenState extends State<HeadListScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
             child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(
-                  vertical: 8, horizontal: 16),
-              title: Text(
-                head["name"],
-                style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.w600),
+              contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              title:
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      head["name"],
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.red[50],
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.red.shade200),
+                    ),
+                    child: Text(
+                      head["max_limit_amount"].toString(),
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.red[400],
+                      ),
+                    ),
+                  ),
+                ],
               ),
+
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -336,9 +313,10 @@ class _HeadListScreenState extends State<HeadListScreen> {
                   if (widget.p_edit == "1")
                     IconButton(
                       icon: Icon(Icons.edit, color: themeColor),
-                      onPressed: () => _showAddEditDialog(
+                      onPressed: () => _showAddEditDialogAdd(
                         id: head["id"].toString(),
                         currentName: head["name"],
+                        currentAmount: head["max_limit_amount"].toString(),
                       ),
                     ),
 

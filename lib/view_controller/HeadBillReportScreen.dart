@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class BillReportScreen extends StatefulWidget {
+class HeadBillReportScreen extends StatefulWidget {
   final String userId;
   final String apiToken;
   final String approv_permission;
 
-  const BillReportScreen({
+  const HeadBillReportScreen({
     super.key,
     required this.userId,
     required this.apiToken,
@@ -15,10 +15,10 @@ class BillReportScreen extends StatefulWidget {
   });
 
   @override
-  State<BillReportScreen> createState() => _BillReportScreenState();
+  State<HeadBillReportScreen> createState() => _HeadBillReportScreenState();
 }
 
-class _BillReportScreenState extends State<BillReportScreen> {
+class _HeadBillReportScreenState extends State<HeadBillReportScreen> {
   bool isLoading = false;
   bool _isFetchingHeads = false;
   List<dynamic> billReport = [];
@@ -54,7 +54,10 @@ class _BillReportScreenState extends State<BillReportScreen> {
         final data = json.decode(responseData);
         if (data["status"] == 200 && data["heads"] != null) {
           setState(() {
-            _heads = List<Map<String, dynamic>>.from(data["heads"]);
+            _heads = [
+              {"id": "all", "name": "All"},
+              ...List<Map<String, dynamic>>.from(data["heads"]),
+            ];
           });
         }
       }
@@ -70,7 +73,7 @@ class _BillReportScreenState extends State<BillReportScreen> {
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-          "https://blueviolet-spoonbill-658373.hostingersite.com/demotesting/api/v1/generate-bill-report",
+          "https://blueviolet-spoonbill-658373.hostingersite.com/demotesting/api/v1/head-wise-report",
         ),
       );
 
@@ -192,7 +195,7 @@ class _BillReportScreenState extends State<BillReportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Bill Report"),
+        title: const Text("Head Bill Report"),
         backgroundColor: const Color(0xFFD2B48C),
       ),
       body: Column(
@@ -309,34 +312,34 @@ class _BillReportScreenState extends State<BillReportScreen> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            Row(
-                              children: [
-                                if (item['verify_status'] != null)
-                                  Text(
-                                    item['verify_status'].toString(),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: item['verify_status'].toString() == "APPROVED"
-                                          ? Colors.green
-                                          : Colors.orange,
-                                    ),
-                                  ),
-                                const SizedBox(width: 8),
-                                // ✅ Show tick only if status is PENDING
-                                if (widget.approv_permission.split(',').contains("verifyheadbill") &&
-                                    item['verify_status'].toString() == "PENDING")
-                                  IconButton(
-                                    icon: const Icon(Icons.check_circle, color: Colors.green),
-                                    onPressed: () async {
-                                      print("object111");
-                                      await _approveBill(
-                                        billId: item['id'].toString(),
-                                        headId: item['head_id'].toString(),
-                                      );
-                                    },
-                                  ),
-                              ],
-                            ),
+                            // Row(
+                            //   children: [
+                            //     if (item['verify_status'] != null)
+                            //       Text(
+                            //         item['verify_status'].toString(),
+                            //         style: TextStyle(
+                            //           fontWeight: FontWeight.bold,
+                            //           color: item['verify_status'].toString() == "APPROVE"
+                            //               ? Colors.green
+                            //               : Colors.orange,
+                            //         ),
+                            //       ),
+                            //     const SizedBox(width: 8),
+                            //     // ✅ Show tick only if status is PENDING
+                            //     if (widget.approv_permission.split(',').contains("verifyheadbill") &&
+                            //         item['verify_status'].toString() == "PENDING")
+                            //       IconButton(
+                            //         icon: const Icon(Icons.check_circle, color: Colors.green),
+                            //         onPressed: () async {
+                            //           print("object111");
+                            //           await _approveBill(
+                            //             billId: item['id'].toString(),
+                            //             headId: item['head_id'].toString(),
+                            //           );
+                            //         },
+                            //       ),
+                            //   ],
+                            // ),
                           ],
                         ),
 

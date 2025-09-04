@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swington_managment/constants/constants.dart';
 import 'package:swington_managment/utils/Utils.dart';
 import 'package:swington_managment/view_controller/AddBillScreen.dart';
+import 'package:swington_managment/view_controller/HeadBillReportScreen.dart';
 import 'package:swington_managment/view_controller/HeadListScreen.dart';
 
 import 'App Imprest.dart';
@@ -86,6 +87,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => AppImprestScreen(userId: userid, apiToken: token,p_add:module["add_permission"].toString() ,p_view: module["view_permission"].toString(),),
+                  ),
+                );
+              }
+              else if(module["module_id"].toString()=="97"){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HeadBillReportScreen(
+                      userId: userid,
+                      apiToken: token,
+                      approv_permission: "1",
+                    ),
                   ),
                 );
               }
