@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => DashboardScreen(adminPermissions: permissions,dashboardsettings: data['admin_userdata']['dashboardsettings'],),
+              builder: (context) => DashboardScreen(adminPermissions: permissions,dashboardsettings: data['admin_userdata']['dashboardsettings'],allCompanies: data["all_company"],currentCompanyId:data["current_company_id"].toString() ,),
             ),
           );
         } else {

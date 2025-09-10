@@ -68,24 +68,27 @@ class _DailyReportScreenState extends State<DailyReportScreen> {
         backgroundColor: const Color(0xFFD2B48C),
         title: const Text("Daily Report"),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.download, color: Colors.black),
-            onPressed: () {
-              print("Download clicked");
-              // Later you can add PDF/Excel download here
-            },
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.download, color: Colors.black),
+          //   onPressed: () {
+          //     print("Download clicked");
+          //     // Later you can add PDF/Excel download here
+          //   },
+          // ),
         ],
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : dayWiseReport.isEmpty
           ? const Center(child: Text("No reports available"))
-          : ListView.builder(
+          :
+      ListView.builder(
         itemCount: dayWiseReport.length,
         itemBuilder: (context, index) {
           final report = dayWiseReport[index];
-          return Card(
+          return
+          Card(
+
             margin: const EdgeInsets.symmetric(
                 horizontal: 12, vertical: 6),
             child: ListTile(

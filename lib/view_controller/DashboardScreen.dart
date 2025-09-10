@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:swington_managment/constants/constants.dart';
 import 'package:swington_managment/utils/Utils.dart';
 import 'package:swington_managment/view_controller/AddBillScreen.dart';
+import 'package:swington_managment/view_controller/AllImprestPaymentReportScreen.dart';
 import 'package:swington_managment/view_controller/DailyReportScreen.dart';
-import 'package:swington_managment/view_controller/HeadBillReportScreen.dart';
 import 'package:swington_managment/view_controller/HeadListScreen.dart';
 import 'package:swington_managment/view_controller/LoginScreen.dart';
 import 'package:swington_managment/view_controller/SaveDailyReportScreen.dart';
@@ -12,11 +14,15 @@ import 'App Imprest.dart';
 class DashboardScreen extends StatefulWidget {
   final List<dynamic> adminPermissions;
   final String dashboardsettings;
+  final List<dynamic> allCompanies;
+  final String currentCompanyId;
 
   const DashboardScreen({
     super.key,
     required this.adminPermissions,
     required this.dashboardsettings,
+    required this.allCompanies,
+    required this.currentCompanyId,
   });
 
   @override
@@ -26,6 +32,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   String userid = "";
   String token = "";
+  String? selectedCompanyId;
 
   @override
   void initState() {
@@ -36,7 +43,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initate() async {
     userid = (await Utils.getStringFromPrefs(constants.USER_ID))!;
     token = (await Utils.getStringFromPrefs(constants.TOKEN))!;
+    selectedCompanyId = widget.currentCompanyId;
     setState(() {});
+  }
+
+  Future<void> _switchCompany(String companyId) async {
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+          "https://blueviolet-spoonbill-658373.hostingersite.com/demotesting/api/v1/switch-company",
+        ),
+      );
+
+      request.fields['apiToken'] = token;
+      request.fields['user_id'] = userid;
+      request.fields['company_id'] = companyId;
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        var res = await http.Response.fromStream(response);
+        var data = jsonDecode(res.body);
+
+        if (data["status"] == 200) {
+
+          SnackBar(content: Text("Company switched successfully!"));
+
+          setState(() {
+            selectedCompanyId = companyId;
+          });
+        } else {
+          SnackBar(content: Text(data["error_msg"] ?? "Failed to switch company"));
+
+        }
+      } else {
+        SnackBar(content: Text("Error: ${response.statusCode}"));
+
+      }
+    } catch (e) {
+      SnackBar(content: Text("Something went wrong: $e"));
+
+    }
   }
 
   void _logout() {
@@ -53,9 +100,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: const Color(0xFFF9F6F2),
       appBar: AppBar(
         backgroundColor: const Color(0xFFD2B48C),
-        title: const Text(
-          "Dashboard",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              "Dashboard",
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+            if (widget.allCompanies.isNotEmpty)
+              DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: selectedCompanyId,
+                  dropdownColor: Colors.white,
+                  icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  onChanged: (value) {
+                    if (value != null && value != selectedCompanyId) {
+                      _switchCompany(value);
+                    }
+                  },
+                  items: widget.allCompanies.map<DropdownMenuItem<String>>((company) {
+                    return DropdownMenuItem<String>(
+                      value: company["id"].toString(),
+                      child: Text(company["name"]),
+                    );
+                  }).toList(),
+                ),
+              ),
+          ],
         ),
         actions: [
           IconButton(
@@ -71,8 +147,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ? const Center(
               child: Text(
                 "No Permissions",
-                style:
-                TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             )
                 : GridView.builder(
@@ -126,15 +201,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                       );
-                    } else if (module["module_id"].toString() == "97" ||
-                        module["module_id"].toString() == "98") {
+                    } else if (module["module_id"].toString() == "98") {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HeadBillReportScreen(
+                          builder: (context) => AllImprestPaymentReportScreen(
                             userId: userid,
                             apiToken: token,
-                            approv_permission: "1",
                           ),
                         ),
                       );
@@ -201,12 +274,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   );
                 },
-
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFD2B48C),
                   foregroundColor: Colors.black,
-                  padding:
-                  const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 14, horizontal: 20),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
