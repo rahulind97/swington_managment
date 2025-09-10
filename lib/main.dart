@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'WBH Management',
+      title: 'UBH Management',
       theme: ThemeData(
 
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

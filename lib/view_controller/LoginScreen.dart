@@ -82,11 +82,13 @@ class _LoginScreenState extends State<LoginScreen> {
           Utils.saveStringToPrefs(constants.EMAIL, _emailController.text);
           Utils.saveStringToPrefs(constants.PASSWORD, _passwordController.text);
 
+          print("object434534");
+          print(data['company']);
           if (!mounted) return;
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => DashboardScreen(adminPermissions: permissions,dashboardsettings: data['admin_userdata']['dashboardsettings'],allCompanies: data["all_company"],currentCompanyId:data["current_company_id"].toString() ,),
+              builder: (context) => DashboardScreen(adminPermissions: permissions,dashboardsettings: data['admin_userdata']['dashboardsettings'],allCompanies: data["all_company"],currentCompanyId:data["current_company_id"].toString()),
             ),
           );
         } else {

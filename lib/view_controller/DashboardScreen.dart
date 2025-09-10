@@ -43,7 +43,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initate() async {
     userid = (await Utils.getStringFromPrefs(constants.USER_ID))!;
     token = (await Utils.getStringFromPrefs(constants.TOKEN))!;
-    selectedCompanyId = widget.currentCompanyId;
+  //  selectedCompanyId = widget.currentCompanyId; // default from login
+    selectedCompanyId=widget.currentCompanyId;
+
     setState(() {});
   }
 
@@ -67,22 +69,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
         if (data["status"] == 200) {
 
-          SnackBar(content: Text("Company switched successfully!"));
 
           setState(() {
-            selectedCompanyId = companyId;
+            selectedCompanyId = companyId; // update dropdown selection
           });
-        } else {
-          SnackBar(content: Text(data["error_msg"] ?? "Failed to switch company"));
 
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Company switched successfully!")),
+          );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LoginScreen(
+              ),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content:
+              Text(data["error_msg"] ?? "Failed to switch company"),
+            ),
+          );
         }
       } else {
-        SnackBar(content: Text("Error: ${response.statusCode}"));
-
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: ${response.statusCode}")),
+        );
       }
     } catch (e) {
-      SnackBar(content: Text("Something went wrong: $e"));
-
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Something went wrong: $e")),
+      );
     }
   }
 
@@ -92,6 +110,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
       MaterialPageRoute(builder: (context) => LoginScreen()),
           (route) => false,
     );
+  }
+
+  String _getSelectedCompanyName() {
+    try {
+      final company = widget.allCompanies.firstWhere(
+            (c) => c["id"].toString() == selectedCompanyId,
+      );
+      return company["name"];
+    } catch (e) {
+      return "No Company Selected";
+    }
   }
 
   @override
@@ -123,7 +152,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       _switchCompany(value);
                     }
                   },
-                  items: widget.allCompanies.map<DropdownMenuItem<String>>((company) {
+                  items: widget.allCompanies
+                      .map<DropdownMenuItem<String>>((company) {
                     return DropdownMenuItem<String>(
                       value: company["id"].toString(),
                       child: Text(company["name"]),
@@ -142,19 +172,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: Column(
         children: [
+
+
           Expanded(
             child: widget.adminPermissions.isEmpty
                 ? const Center(
               child: Text(
                 "No Permissions",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             )
                 : GridView.builder(
               padding: const EdgeInsets.all(16),
               gridDelegate:
               const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // 2 buttons per row
+                crossAxisCount: 2,
                 crossAxisSpacing: 14,
                 mainAxisSpacing: 14,
                 childAspectRatio: 1.15,
@@ -237,8 +270,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     child: Center(
                       child: Padding(
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
                           module["module_name"],
                           textAlign: TextAlign.center,
@@ -256,7 +288,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
 
-          // --- Standout Button ---
+          // --- Save Daily Report Button ---
           Padding(
             padding: const EdgeInsets.only(bottom: 28.0),
             child: Container(
