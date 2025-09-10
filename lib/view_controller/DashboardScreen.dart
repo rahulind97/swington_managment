@@ -8,6 +8,7 @@ import 'package:swington_managment/view_controller/AllImprestPaymentReportScreen
 import 'package:swington_managment/view_controller/DailyReportScreen.dart';
 import 'package:swington_managment/view_controller/HeadListScreen.dart';
 import 'package:swington_managment/view_controller/LoginScreen.dart';
+import 'package:swington_managment/view_controller/ReLoginScreen.dart';
 import 'package:swington_managment/view_controller/SaveDailyReportScreen.dart';
 import 'App Imprest.dart';
 
@@ -80,7 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => LoginScreen(
+              builder: (context) => ReLoginScreen(
               ),
             ),
           );
@@ -234,7 +235,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                       );
-                    } else if (module["module_id"].toString() == "98") {
+                    } else if (module["module_id"].toString() == "98" ||module["module_id"].toString() == "97") {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
