@@ -83,6 +83,7 @@ class _ReLoginScreenState extends State<ReLoginScreen> {
           Utils.saveStringToPrefs(constants.EMAIL, _emailController.text);
           Utils.saveStringToPrefs(constants.PASSWORD, _passwordController.text);
 
+
           print("object434534");
           print(data['company']);
           if (!mounted) return;
